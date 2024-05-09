@@ -1,0 +1,431 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyNE76p/nNdmc32yH63TKIGa",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/LeoCabrall/Projeto-Imers-o-Alura-/blob/main/texte%20Alura%20aula%204%20\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Inslalando o SDK do Google"
+      ],
+      "metadata": {
+        "id": "3avvEx64JwiV"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 1,
+      "metadata": {
+        "id": "9OEoeosRTv-5"
+      },
+      "outputs": [],
+      "source": [
+        "!pip install -q -U google-generativeai"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Import the Python SDK\n",
+        "import google.generativeai as genai\n",
+        "GOOGLE_API_KEY='AIzaSyAeV44Ox-MV1pBAXAP3tHOpJxhUVeUU4YY'\n",
+        "\n",
+        "genai.configure(api_key=GOOGLE_API_KEY)"
+      ],
+      "metadata": {
+        "id": "NlgQF9L0KGp1"
+      },
+      "execution_count": 2,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Listar modelos disponiveis"
+      ],
+      "metadata": {
+        "id": "zrf3q1LIKQ3Z"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "for m in genai.list_models():\n",
+        "  if 'generateContent' in m.supported_generation_methods:\n",
+        "    print(m.name)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 139
+        },
+        "id": "d2VoD7kHKUD9",
+        "outputId": "132d4b1b-6a06-4a83-ba6b-98c95f35b371"
+      },
+      "execution_count": 4,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "models/gemini-1.0-pro\n",
+            "models/gemini-1.0-pro-001\n",
+            "models/gemini-1.0-pro-latest\n",
+            "models/gemini-1.0-pro-vision-latest\n",
+            "models/gemini-1.5-pro-latest\n",
+            "models/gemini-pro\n",
+            "models/gemini-pro-vision\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Temperatura"
+      ],
+      "metadata": {
+        "id": "CUI4zVlWQfD2"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "generation_conf ={\n",
+        "    'candidate_count': 1,\n",
+        "    'temperature': 0.5\n",
+        "}"
+      ],
+      "metadata": {
+        "id": "Hk8zsczwNFtt"
+      },
+      "execution_count": 5,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Segurança de Linguagem"
+      ],
+      "metadata": {
+        "id": "1QcqTPWgQU9U"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "safety_settings = {\n",
+        "    'HARASSMENT': 'BLOCK_NONE',\n",
+        "    'HATE': 'BLOCK_NONE',\n",
+        "    'SEXUAL': 'BLOCK_NONE',\n",
+        "    'DANGEROUS': 'BLOCK_NONE',\n",
+        "}"
+      ],
+      "metadata": {
+        "id": "cpeDm77GOdyO"
+      },
+      "execution_count": 6,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Inicializando o Modelo"
+      ],
+      "metadata": {
+        "id": "vdiKJqFuSAgd"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "model = genai.GenerativeModel(model_name= 'gemini-1.0-pro',\n",
+        "                              generation_config=generation_conf,\n",
+        "                              safety_settings=safety_settings)"
+      ],
+      "metadata": {
+        "id": "xybS3YsFSGHE"
+      },
+      "execution_count": 8,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Resposta"
+      ],
+      "metadata": {
+        "id": "u6q3kvJmUGDM"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "response = model.generate_content('Vamos aprender conteúdo sobre IA. Me de sugestões.')\n",
+        "print(response.text)\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 781
+        },
+        "id": "wD3I6y-_TcRv",
+        "outputId": "380e5d34-c0ae-4a47-e80b-0bad15ef4770"
+      },
+      "execution_count": 10,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "**Conceitos Fundamentais**\n",
+            "\n",
+            "* Definição e história da Inteligência Artificial (IA)\n",
+            "* Tipos de IA: aprendizagem de máquina, aprendizado profundo, processamento de linguagem natural\n",
+            "* Algoritmos de IA: regressão, classificação, agrupamento\n",
+            "\n",
+            "**Aprendizado de Máquina**\n",
+            "\n",
+            "* Aprendizado supervisionado vs. não supervisionado\n",
+            "* Modelos de aprendizado de máquina: árvores de decisão, redes neurais, máquinas de vetores de suporte\n",
+            "* Avaliação de modelos de aprendizado de máquina: precisão, recall, F1-score\n",
+            "\n",
+            "**Aprendizado Profundo**\n",
+            "\n",
+            "* Redes neurais: perceptrons, camadas ocultas, retropropagação\n",
+            "* Tipos de redes neurais: redes convolucionais, redes recorrentes\n",
+            "* Aplicações de aprendizado profundo: reconhecimento de imagem, processamento de linguagem natural\n",
+            "\n",
+            "**Processamento de Linguagem Natural (PNL)**\n",
+            "\n",
+            "* Representação de texto: vetores de palavras, embeddings\n",
+            "* Modelos de PNL: modelos de linguagem, análise de sentimento\n",
+            "* Aplicações de PNL: tradução automática, resumo de texto\n",
+            "\n",
+            "**Ética e Implicações Sociais da IA**\n",
+            "\n",
+            "* Preconceito e discriminação em IA\n",
+            "* Responsabilidade e transparência em sistemas de IA\n",
+            "* Implicações econômicas e sociais da automação\n",
+            "\n",
+            "**Aplicações Práticas da IA**\n",
+            "\n",
+            "* Reconhecimento de imagem e vídeo\n",
+            "* Processamento de linguagem natural e tradução\n",
+            "* Diagnóstico médico e descoberta de medicamentos\n",
+            "* Veículos autônomos e robótica\n",
+            "* Finanças e previsão de mercado\n",
+            "\n",
+            "**Recursos Adicionais**\n",
+            "\n",
+            "* **Cursos online:** Coursera, edX, Udemy\n",
+            "* **Livros:** \"Inteligência Artificial: Uma Abordagem Moderna\" por Stuart Russell e Peter Norvig, \"Aprendizado de Máquina\" por Tom Mitchell\n",
+            "* **Revistas acadêmicas:** Journal of Artificial Intelligence Research, IEEE Transactions on Neural Networks and Learning Systems\n",
+            "* **Conferências:** Conferência Internacional sobre Aprendizado de Máquina (ICML), Conferência sobre Visão Computacional e Reconhecimento de Padrões (CVPR)\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "chat = model.start_chat(history=[])"
+      ],
+      "metadata": {
+        "id": "uSiMa4XPZz3w"
+      },
+      "execution_count": 13,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "prompt = input('Esperando prompt: ')\n",
+        "\n",
+        "while prompt != 'fim:':\n",
+        "  response = chat.send_message(prompt)\n",
+        "  print('Resposta: ', response.text, \"\\n\")\n",
+        "  prompt = input('Esperando prompt: ')"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 356
+        },
+        "id": "TGbWDwbqaiQA",
+        "outputId": "859687c3-a499-4df8-99f6-32dda19aa3fa"
+      },
+      "execution_count": 16,
+      "outputs": [
+        {
+          "output_type": "error",
+          "ename": "KeyboardInterrupt",
+          "evalue": "Interrupted by user",
+          "traceback": [
+            "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+            "\u001b[0;31mKeyboardInterrupt\u001b[0m                         Traceback (most recent call last)",
+            "\u001b[0;32m<ipython-input-16-60109908afc4>\u001b[0m in \u001b[0;36m<cell line: 1>\u001b[0;34m()\u001b[0m\n\u001b[0;32m----> 1\u001b[0;31m \u001b[0mprompt\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0minput\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m'Esperando prompt: '\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      2\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      3\u001b[0m \u001b[0;32mwhile\u001b[0m \u001b[0mprompt\u001b[0m \u001b[0;34m!=\u001b[0m \u001b[0;34m'fim:'\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      4\u001b[0m   \u001b[0mresponse\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mchat\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0msend_message\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mprompt\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      5\u001b[0m   \u001b[0mprint\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m'Resposta: '\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mresponse\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mtext\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m\"\\n\"\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/local/lib/python3.10/dist-packages/ipykernel/kernelbase.py\u001b[0m in \u001b[0;36mraw_input\u001b[0;34m(self, prompt)\u001b[0m\n\u001b[1;32m    849\u001b[0m                 \u001b[0;34m\"raw_input was called, but this frontend does not support input requests.\"\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    850\u001b[0m             )\n\u001b[0;32m--> 851\u001b[0;31m         return self._input_request(str(prompt),\n\u001b[0m\u001b[1;32m    852\u001b[0m             \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_parent_ident\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    853\u001b[0m             \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_parent_header\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;32m/usr/local/lib/python3.10/dist-packages/ipykernel/kernelbase.py\u001b[0m in \u001b[0;36m_input_request\u001b[0;34m(self, prompt, ident, parent, password)\u001b[0m\n\u001b[1;32m    893\u001b[0m             \u001b[0;32mexcept\u001b[0m \u001b[0mKeyboardInterrupt\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    894\u001b[0m                 \u001b[0;31m# re-raise KeyboardInterrupt, to truncate traceback\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 895\u001b[0;31m                 \u001b[0;32mraise\u001b[0m \u001b[0mKeyboardInterrupt\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m\"Interrupted by user\"\u001b[0m\u001b[0;34m)\u001b[0m \u001b[0;32mfrom\u001b[0m \u001b[0;32mNone\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    896\u001b[0m             \u001b[0;32mexcept\u001b[0m \u001b[0mException\u001b[0m \u001b[0;32mas\u001b[0m \u001b[0me\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    897\u001b[0m                 \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mlog\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mwarning\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m\"Invalid Message:\"\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mexc_info\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;32mTrue\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+            "\u001b[0;31mKeyboardInterrupt\u001b[0m: Interrupted by user"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 17,
+      "metadata": {
+        "id": "dAcbPBocgzeX",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 509
+        },
+        "outputId": "6793a381-b90b-4fc7-83f2-db36677c7352"
+      },
+      "outputs": [
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": [
+              "<IPython.core.display.Markdown object>"
+            ],
+            "text/markdown": "> **user**: quel é a capital de nova york "
+          },
+          "metadata": {}
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "-------------------------------------------\n"
+          ]
+        },
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": [
+              "<IPython.core.display.Markdown object>"
+            ],
+            "text/markdown": "> **model**: Nova York não é um estado, é uma cidade. Portanto, não possui capital."
+          },
+          "metadata": {}
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "-------------------------------------------\n"
+          ]
+        },
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": [
+              "<IPython.core.display.Markdown object>"
+            ],
+            "text/markdown": "> **user**: por que "
+          },
+          "metadata": {}
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "-------------------------------------------\n"
+          ]
+        },
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": [
+              "<IPython.core.display.Markdown object>"
+            ],
+            "text/markdown": "> **model**: Nova York é uma das 5 cidades que compõem o estado de Nova York. As outras quatro cidades são Albany, Buffalo, Rochester e Yonkers. Albany é a capital do estado de Nova York.\n> \n> As cidades de Nova York são unidades administrativas independentes dentro do estado. Elas têm seus próprios governos e prestam serviços aos seus residentes, como coleta de lixo, manutenção de estradas e policiamento.\n> \n> Embora Nova York seja a cidade mais populosa do estado e dos Estados Unidos, ela não é a capital porque esse título foi dado a Albany pela legislatura estadual em 1797. Albany está localizada no centro-leste do estado, no rio Hudson, e tem sido um importante centro político e econômico desde a época colonial."
+          },
+          "metadata": {}
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "-------------------------------------------\n"
+          ]
+        },
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": [
+              "<IPython.core.display.Markdown object>"
+            ],
+            "text/markdown": "> **user**: fim "
+          },
+          "metadata": {}
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "-------------------------------------------\n"
+          ]
+        },
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": [
+              "<IPython.core.display.Markdown object>"
+            ],
+            "text/markdown": "> **model**: Obrigado por conversar comigo. Foi um prazer."
+          },
+          "metadata": {}
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "-------------------------------------------\n"
+          ]
+        }
+      ],
+      "source": [
+        "#Melhorando a visualização\n",
+        "#Código disponível em https://ai.google.dev/tutorials/python_quickstart#import_packages\n",
+        "import textwrap\n",
+        "from IPython.display import display\n",
+        "from IPython.display import Markdown\n",
+        "\n",
+        "def to_markdown(text):\n",
+        "  text = text.replace('•', '  *')\n",
+        "  return Markdown(textwrap.indent(text, '> ', predicate=lambda _: True))\n",
+        "\n",
+        "#Imprimindo o histórico\n",
+        "for message in chat.history:\n",
+        "  display(to_markdown(f'**{message.role}**: {message.parts[0].text}'))\n",
+        "  print('-------------------------------------------')"
+      ]
+    }
+  ]
+}
